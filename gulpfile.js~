@@ -1,0 +1,13 @@
+var gulp = require('gulp');
+
+function startExpressServer() {
+	var express = require('express');
+	var app = express();
+
+	app.use(express.static(__dirname));
+	app.listen(4000);
+};
+
+gulp.task('default', function(){
+	console.log('Default gulp task');
+});

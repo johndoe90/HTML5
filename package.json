@@ -1,0 +1,15 @@
+{
+  "name": "HTML5",
+  "version": "1.0.0",
+  "description": "HTML5 tutorial",
+  "dependencies": {},
+  "devDependencies": {
+    "connect-livereload": "^0.5.2",
+    "express": "^4.11.2",
+    "gulp": "^3.8.10",
+    "tiny-lr": "^0.1.5"
+  },
+  "scripts": {},
+  "author": "Phillip Friedrich",
+  "license": "MIT"
+}
