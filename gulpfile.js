@@ -24,8 +24,14 @@ function notifyLivereload(event) {
 	});
 };
 
+gulp.task('cssmin', function() {
+	gulp.src('assets/css/*.css', {base: 'assets'})
+		.pipe(require('gulp-minify-css')())
+		.pipe(gulp.dest('dist'));
+});
+
 gulp.task('default', function(){
 	startExpressServer();
 	startLivereload();
-	gulp.watch('*.html', notifyLivereload);
+	gulp.watch('**/*', notifyLivereload);
 });
