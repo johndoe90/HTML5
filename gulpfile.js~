@@ -1,13 +1,63 @@
+var tinyLr;
+var path = require('path');
 var gulp = require('gulp');
+var lr = require('tiny-lr');
+var jshint = require('gulp-jshint');
+var karma = require('karma').server;
 
-function startExpressServer() {
+var SCRIPTS = ['app/**/*.js'];
+var CSS = ['assets/css/**/*.css'];
+var HTML = ['index.html', 'app/**/*.html'];
+
+function notifyLr(event) {
+	tinyLr.changed({
+		body: {
+			files: [path.relative(__dirname, event.path)]
+		}
+	});
+};
+
+gulp.task('express', function() {
 	var express = require('express');
 	var app = express();
 
+	app.use(require('connect-livereload')());
 	app.use(express.static(__dirname));
 	app.listen(4000);
-};
-
-gulp.task('default', function(){
-	console.log('Default gulp task');
 });
+
+gulp.task('livereload', function() {
+	tinyLr = require('tiny-lr')();
+	tinyLr.listen(35729);
+});
+
+gulp.task('tdd', function(cb) {
+	karma.start({
+		configFile: __dirname + '/karma.conf.js'
+	}, cb);
+});
+
+gulp.task('jshint:single', function() {
+	gulp.src(SCRIPTS)
+			.pipe(jshint())
+			.pipe(jshint.reporter('jshint-stylish'));
+			//.pipe(jshint.reporter('fail'));
+});
+
+gulp.task('watch', function() {	
+	gulp.watch(CSS, notifyLr);
+	gulp.watch(HTML, notifyLr);
+	gulp.watch(SCRIPTS, ['jshint:single']);
+});
+
+gulp.task('default', ['tdd', 'express', 'livereload', 'watch'], function(){});
+gulp.task('serve', ['default'], function() {});
+
+
+/*gulp.task('cssmin', function() {
+	gulp.src('assets/css/*.css', {base: 'assets'})
+		.pipe(require('gulp-minify-css')())
+		.pipe(gulp.dest('dist'));
+});*/
+
+
